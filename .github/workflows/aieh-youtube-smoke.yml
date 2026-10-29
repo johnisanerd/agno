@@ -1,0 +1,45 @@
+name: aieh-youtube-smoke
+on:
+  push:
+    branches: [ci/aieh-youtube-smoke]
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      UV_PYTHON: ${{ matrix.python }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    defaults:
+      run:
+        working-directory: smoke/youtube-research-agent-apify
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@v6
+      - name: Install with uv sync (README path)
+        run: uv sync
+      - name: Show resolved versions
+        run: uv pip list | grep -i -E "crewai|apify|langchain|streamlit|openai|litellm" || true
+      - name: Streamlit app renders (no run)
+        run: |
+          uv run python - <<'PY'
+          from streamlit.testing.v1 import AppTest
+          at = AppTest.from_file("app.py", default_timeout=60).run()
+          assert not at.exception, at.exception
+          print("app.py rendered OK; title:", at.title[0].value)
+          PY
+      - name: Run the CLI end to end on one short video
+        env:
+          APIFY_API_TOKEN: ${{ secrets.APIFY_API_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          uv run python research_crew.py "https://www.youtube.com/watch?v=jNQXAC9IVRw" \
+            -q "What is the speaker talking about, and where is he?" 2>&1 | tee run.log
+          grep -q "Fetched 1 transcript(s)" run.log
+          grep -q "===== Final answer =====" run.log
