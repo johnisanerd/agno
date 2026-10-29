@@ -20,6 +20,8 @@ def load_llm():
     return LLM(
         model=os.getenv("MODEL", "gpt-4o-mini"),
         api_key=os.getenv("OPENAI_API_KEY"),
+        # Optional: any OpenAI-compatible endpoint
+        base_url=os.getenv("OPENAI_BASE_URL"),
     )
 
 

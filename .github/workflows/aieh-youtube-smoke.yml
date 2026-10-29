@@ -44,7 +44,7 @@ jobs:
           # client at GitHub Models (OpenAI-compatible) for this smoke run.
           OPENAI_API_KEY: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_BASE_URL: https://models.github.ai/inference
-          MODEL: gpt-4o-mini
+          MODEL: openai/openai/gpt-4o-mini
         run: |
           uv run python research_crew.py "https://www.youtube.com/watch?v=jNQXAC9IVRw" \
             -q "What is the speaker talking about, and where is he?" 2>&1 | tee run.log
