@@ -34,7 +34,7 @@ APIFY_API_TOKEN=<your_apify_api_token>
 OPENAI_API_KEY=<your_openai_api_key>
 ```
 
-Optionally set `MODEL` to use a different LLM, for example `MODEL=gpt-4o`, and `OPENAI_BASE_URL` to use any OpenAI-compatible endpoint.
+Optionally set `MODEL` to use a different LLM, for example `MODEL=gpt-4o`.
 
 ### Install Dependencies
 
