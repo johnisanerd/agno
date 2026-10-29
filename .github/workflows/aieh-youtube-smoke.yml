@@ -37,6 +37,13 @@ jobs:
           assert not at.exception, at.exception
           print("app.py rendered OK; title:", at.title[0].value)
           PY
+      - name: Probe GitHub Models endpoint
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -s -i https://models.github.ai/inference/chat/completions \
+            -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/json" \
+            -d '{"model":"openai/gpt-4o-mini","messages":[{"role":"user","content":"Say ok"}],"max_tokens":5}' | head -c 1500
       - name: Run the CLI end to end on one short video
         env:
           APIFY_API_TOKEN: ${{ secrets.APIFY_API_TOKEN }}
