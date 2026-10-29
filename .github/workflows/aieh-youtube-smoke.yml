@@ -43,7 +43,7 @@ jobs:
           # The fork's OPENAI_API_KEY secret is expired, so point the same OpenAI
           # client at GitHub Models (OpenAI-compatible) for this smoke run.
           OPENAI_API_KEY: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_BASE_URL: https://models.inference.ai.azure.com
+          OPENAI_BASE_URL: https://models.github.ai/inference
           MODEL: gpt-4o-mini
         run: |
           uv run python research_crew.py "https://www.youtube.com/watch?v=jNQXAC9IVRw" \
